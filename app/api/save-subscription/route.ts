@@ -1,8 +1,6 @@
 // app/api/save-subscription/route.ts
-
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
-
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 const plans = {
   vip: { name: "VIP", days: 3 },
   elite: { name: "ÉLITE", days: 7 },
