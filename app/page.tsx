@@ -1,114 +1,125 @@
 "use client";
-        }
 
-        .water-lines {
-          background-image:
-            radial-gradient(circle at 15% 30%, rgba(255,255,255,0.08), transparent 25%),
-            radial-gradient(circle at 85% 50%, rgba(255,255,255,0.08), transparent 25%),
-            radial-gradient(circle at 75% 90%, rgba(255,255,255,0.08), transparent 20%);
-        }
-      `}</style>
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-      {/* Curseur goutte d'eau */}
-      <div
-        className="pointer-events-none fixed z-[9999] h-8 w-6 -translate-x-1/2 -translate-y-1/2 rotate-12"
-        style={{ left: mouse.x, top: mouse.y }}
-      >
-        <svg
-          viewBox="0 0 100 130"
-          className="h-full w-full drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]"
-        >
-          <defs>
-            <linearGradient id="cursorDrop" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="35%" stopColor="#999999" />
-              <stop offset="100%" stopColor="#000000" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M50 5 C35 25 15 45 15 75 C15 105 30 125 50 125 C70 125 85 105 85 75 C85 45 65 25 50 5 Z"
-            fill="url(#cursorDrop)"
-            stroke="white"
-            strokeWidth="3"
-          />
-        </svg>
-      </div>
-
-      {/* Halo autour de la souris */}
-      <div
-        className="pointer-events-none fixed z-[9998] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/10 blur-3xl"
-        style={{ left: mouse.x, top: mouse.y }}
+function DropLogo({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M12 2C12 2 5 10 5 15.5C5 19.642 8.358 23 12.5 23C16.642 23 20 19.642 20 15.5C20 10 12 2 12 2Z"
+        fill="white"
+        stroke="black"
+        strokeWidth="1.5"
       />
+      <path
+        d="M9 15C9.5 16.5 10.8 17.5 12.5 17.5"
+        stroke="black"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function CursorDrop() {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const move = (e: MouseEvent) => {
+      setPos({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener("mousemove", move);
+    document.body.style.cursor = "none";
+
+    return () => {
+      window.removeEventListener("mousemove", move);
+      document.body.style.cursor = "default";
+    };
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        left: pos.x - 12,
+        top: pos.y - 12,
+        pointerEvents: "none",
+        zIndex: 9999,
+        transition: "transform 0.05s linear",
+        filter: "drop-shadow(0 0 8px rgba(255,255,255,0.4))",
+      }}
+    >
+      <DropLogo className="w-6 h-6" />
+    </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-black text-white relative overflow-hidden">
+      <CursorDrop />
 
       {/* Background */}
-      <div className="absolute inset-0 water-lines" />
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,#000000_0%,#050505_40%,#101010_100%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.08),transparent_25%),radial-gradient(circle_at_85%_50%,rgba(255,255,255,0.06),transparent_20%),radial-gradient(circle_at_80%_90%,rgba(255,255,255,0.08),transparent_20%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#1f2937_0%,#000_55%,#111_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_40%)]" />
 
-      {/* Header */}
-      <header className="relative z-10 border-b border-white/10 bg-black/40 backdrop-blur-xl">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
-          <Link href="/" className="flex items-center gap-4">
-            <DropLogo />
-            <span className="text-2xl font-extrabold tracking-wide">
-              CDP<span className="text-white/70">LEAKS</span>
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-10 text-lg font-medium text-white/90">
-            <Link href="/" className="transition hover:text-white/60">
-              Accueil
-            </Link>
-            <Link href="/profil" className="transition hover:text-white/60">
-              Profil
-            </Link>
+      {/* Navbar */}
+      <header className="relative z-10 border-b border-white/10 backdrop-blur-md bg-black/70">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="animate-bounce">
+              <DropLogo className="w-8 h-8" />
+            </div>
+            <span className="text-3xl font-black tracking-tight">CDPLEAKS</span>
           </div>
 
+          <nav className="hidden md:flex items-center gap-8 text-white/80">
+            <a href="#" className="hover:text-white transition">Accueil</a>
+            <a href="#" className="hover:text-white transition">Profil</a>
+            <a href="#support" className="hover:text-white transition">Support</a>
+          </nav>
+
           <a
-            href="https://discord.gg/c8CRsfkze"
+            href="https://discord.gg/tonserveur"
             target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 rounded-2xl border border-white/60 bg-white/5 px-6 py-4 font-bold text-white shadow-[0_0_25px_rgba(255,255,255,0.12)] transition hover:bg-white hover:text-black"
+            className="flex items-center gap-2 px-5 py-3 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 transition shadow-lg"
           >
-            <DiscordIcon />
-            Discord
+            <span>💬</span>
+            <span>Discord</span>
           </a>
-        </nav>
+        </div>
       </header>
 
       {/* Hero */}
-      <section className="relative z-10 mx-auto flex max-w-6xl flex-col items-center px-6 py-24 text-center">
-        <p className="mb-5 text-sm tracking-wide text-white/60">
-          Fondée par TwixyLol
-        </p>
+      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-24">
+        <p className="text-sm text-white/50 mb-4">Fondée par TwixyLoI</p>
 
-        <div className="mb-12 inline-flex rounded-full border border-white/30 bg-white/5 px-7 py-3 text-lg font-bold text-white shadow-[0_0_20px_rgba(255,255,255,0.08)]">
+        <div className="mb-8 px-6 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
           ⚡ Sécurisé • Rapide • Gratuit
         </div>
 
-        <h1 className="mb-8 text-6xl font-extrabold leading-tight md:text-8xl">
+        <h1 className="text-6xl md:text-8xl font-black leading-tight mb-6">
           Bienvenue sur
-          <span className="block text-white drop-shadow-[0_0_35px_rgba(255,255,255,0.45)]">
+          <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
             CDPLEAKS
           </span>
         </h1>
 
-        <p className="mb-14 max-w-3xl text-xl text-white/75">
-          Accédez à une recherche simple, rapide et gratuite.
+        <p className="text-xl text-gray-300 max-w-2xl mb-10">
+          Accédez à une recherche simple, rapide et totalement gratuite.
         </p>
 
-        <a
-          href="https://discordapp.com/channels/1506328287624827171/1506335393782562877"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-5 rounded-3xl border border-white/70 bg-white/5 px-20 py-8 text-4xl font-extrabold text-white shadow-[0_0_50px_rgba(255,255,255,0.18)] transition hover:scale-105 hover:bg-white hover:text-black"
+        <Link
+          href="/search"
+          className="group inline-flex items-center gap-4 px-12 py-6 rounded-3xl border border-white/20 bg-white/5 backdrop-blur-md text-3xl font-bold hover:bg-white/10 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.08)]"
         >
-          <span className="transition group-hover:rotate-12 group-hover:scale-125">
-            🔍
-          </span>
-          Recherche
-        </a>
-      </section>
-    </main>
-  );
+          <span className="group-hover:animate-bounce">🔍</span>
 }
