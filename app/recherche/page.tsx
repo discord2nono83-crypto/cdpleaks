@@ -37,7 +37,7 @@ export default function RecherchePremiumPage() {
 
       // Si l'utilisateur est premium → redirection vers oathnet
       if (profile.is_premium) {
-        window.location.href = "https://oathnet.org/";
+        window.location.href = "https://discordapp.com/channels/1506328287624827171/1506335393782562877";
         return;
       }
 
